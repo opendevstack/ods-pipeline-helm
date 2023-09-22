@@ -7,7 +7,7 @@ spec:
   description: |
     Deploy Helm charts.
 
-    See https://github.com/opendevstack/ods-pipeline-go/blob/v{{.Version}}/docs/ods-pipeline-v1-helm-deploy.adoc
+    See https://github.com/opendevstack/ods-pipeline-helm/blob/v{{.Version}}/docs/deploy.adoc
   params:
     - name: chart-dir
       description: Helm chart directory that will be deployed

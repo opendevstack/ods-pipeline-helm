@@ -1,4 +1,4 @@
-# ods-pipeline-go
+# ods-pipeline-helm
 
 Tekton task for use with [ODS Pipeline](https://github.com/opendevstack/ods-pipeline) to deploy Helm charts.
 
