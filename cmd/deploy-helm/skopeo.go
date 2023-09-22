@@ -19,7 +19,7 @@ func (d *deployHelm) copyImage(imageArtifact artifact.Image, destRegistryToken s
 	srcRegistryTLSVerify := d.opts.srcRegistryTLSVerify
 	// TLS verification of the KinD registry is not possible at the moment as
 	// requests error out with "server gave HTTP response to HTTPS client".
-	if strings.HasPrefix(imageArtifact.Registry, "kind-registry.kind") {
+	if strings.HasPrefix(imageArtifact.Registry, "ods-pipeline-registry.kind") {
 		srcRegistryTLSVerify = false
 		destRegistryTLSVerify = false
 	}

@@ -26,7 +26,7 @@ import (
 
 const (
 	localRegistry = "localhost:5000"
-	kindRegistry  = "kind-registry.kind:5000"
+	kindRegistry  = "ods-pipeline-registry.kind:5000"
 )
 
 type imageImportParams struct {
