@@ -3,7 +3,7 @@ module github.com/opendevstack/ods-pipeline-helm
 go 1.19
 
 require (
-	github.com/opendevstack/ods-pipeline v0.13.3-0.20230908135016-09dda3bbf622
+	github.com/opendevstack/ods-pipeline v0.13.3-0.20230913064953-c7df840415df
 	github.com/tektoncd/pipeline v0.49.0
 )
 
