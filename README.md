@@ -17,7 +17,9 @@ tasks:
     - { name: source, workspace: shared-workspace }
 ```
 
-See the [documentation](https://github.com/opendevstack/ods-pipeline-helm/blob/main/docs/deploy.adoc) for details and available parameters.
+See the [documentation](/docs/deploy.adoc) for details and available parameters.
+
+The task supports encrypted secrets via the [`helm-secrets`](https://github.com/jkroepke/helm-secrets) plugin. If you want to use this feature, please see the [Working with Helm secrets](/docs/helm-secrets.adoc) documentation.
 
 ## About this repository
 
