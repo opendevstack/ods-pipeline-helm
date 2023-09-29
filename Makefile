@@ -4,9 +4,6 @@ SHELL = /bin/bash
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
-# Variables
-VERSION?=latest
-
 ##@ General
 
 # help target is based on https://github.com/operator-framework/operator-sdk/blob/master/release/Makefile.
@@ -32,7 +29,7 @@ image-helm: ## Build helm image.
 tasks: ## Render tasks. Use VERSION=1.0.0 make tasks to render specific version.
 	go run github.com/opendevstack/ods-pipeline/cmd/taskmanifest \
 		-data ImageRepository=ghcr.io/opendevstack/ods-pipeline-helm \
-		-data Version=$(VERSION) \
+		-data Version=$$(cat version) \
 		-template build/tasks/deploy.yaml \
 		-destination tasks/deploy.yaml
 .PHONY: tasks
