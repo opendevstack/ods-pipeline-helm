@@ -14,7 +14,7 @@ import (
 	ott "github.com/opendevstack/ods-pipeline/pkg/odstasktest"
 	"github.com/opendevstack/ods-pipeline/pkg/pipelinectxt"
 	ttr "github.com/opendevstack/ods-pipeline/pkg/tektontaskrun"
-	tekton "github.com/tektoncd/pipeline/pkg/apis/pipeline/v1beta1"
+	tekton "github.com/tektoncd/pipeline/pkg/apis/pipeline/v1"
 	corev1 "k8s.io/api/core/v1"
 	rbacv1 "k8s.io/api/rbac/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
