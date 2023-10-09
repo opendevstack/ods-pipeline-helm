@@ -10,6 +10,12 @@ listed in the changelog.
 
 ## [Unreleased]
 
+## [0.2.0] - 2023-10-09
+
+### Changed
+
+- Migrate from Tekton v1beta1 resources to v1 ([#7](https://github.com/opendevstack/ods-pipeline-helm/pull/7))
+
 ## [0.1.0] - 2023-09-29
 
 Initial version.
