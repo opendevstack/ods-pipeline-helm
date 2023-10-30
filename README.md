@@ -13,7 +13,7 @@ tasks:
     resolver: git
     params:
     - { name: url, value: https://github.com/opendevstack/ods-pipeline-helm.git }
-    - { name: revision, value: v0.2.0 }
+    - { name: revision, value: v0.3.0 }
     - { name: pathInRepo, value: tasks/deploy.yaml }
     workspaces:
     - { name: source, workspace: shared-workspace }

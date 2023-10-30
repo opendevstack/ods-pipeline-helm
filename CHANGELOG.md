@@ -10,6 +10,8 @@ listed in the changelog.
 
 ## [Unreleased]
 
+## [0.3.0] - 2023-10-30
+
 ### Changed
 
 - Retain Helm release record ([#9](https://github.com/opendevstack/ods-pipeline-helm/pull/9)). Note that this removes the previously retained "release" txt file. The data in the new YAML file contains all previous information and more.
