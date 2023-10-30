@@ -58,6 +58,11 @@ func setupContext() DeployStep {
 		}
 		d.clientset = clientset
 
+		err = os.MkdirAll(pipelinectxt.DeploymentsPath, 0755)
+		if err != nil {
+			return d, fmt.Errorf("create artifact path: %w", err)
+		}
+
 		return d, nil
 	}
 }
@@ -333,15 +338,29 @@ func upgradeHelmRelease() DeployStep {
 			return d, fmt.Errorf("assemble helm upgrade args: %w", err)
 		}
 		printlnSafeHelmCmd(helmUpgradeArgs, os.Stdout)
-		var upgradeStdoutBuf bytes.Buffer
-		upgradeStdoutWriter := io.MultiWriter(os.Stdout, &upgradeStdoutBuf)
-		err = d.helmUpgrade(helmUpgradeArgs, upgradeStdoutWriter, os.Stderr)
+		err = d.helmUpgrade(helmUpgradeArgs, os.Stdout, os.Stderr)
 		if err != nil {
 			return d, fmt.Errorf("helm upgrade: %w", err)
 		}
-		err = writeDeploymentArtifact(upgradeStdoutBuf.Bytes(), "release", d.opts.chartDir, d.targetConfig.Namespace)
-		if err != nil {
-			return d, fmt.Errorf("write release artifact: %w", err)
+		return d, nil
+	}
+}
+
+func gatherHelmStatus() DeployStep {
+	return func(d *deployHelm) (*deployHelm, error) {
+		if d.opts.gatherStatus {
+			d.logger.Infof("Gathering Helm status of release %s...", d.releaseName)
+
+			fn := artifactFilename("release-"+d.releaseName, d.opts.chartDir, d.releaseNamespace) + ".yaml"
+			f, err := os.Create(filepath.Join(pipelinectxt.DeploymentsPath, fn))
+			if err != nil {
+				return d, fmt.Errorf("create file for helm status: %w", err)
+			}
+
+			err = d.helmStatus([]string{d.releaseName, "-o", "yaml"}, f, os.Stderr)
+			if err != nil {
+				return d, fmt.Errorf("helm status: %w", err)
+			}
 		}
 		return d, nil
 	}
@@ -364,10 +383,6 @@ func tokenFromSecret(clientset *kubernetes.Clientset, namespace, name string) (s
 }
 
 func writeDeploymentArtifact(content []byte, filename, chartDir, targetEnv string) error {
-	err := os.MkdirAll(pipelinectxt.DeploymentsPath, 0755)
-	if err != nil {
-		return err
-	}
 	f := artifactFilename(filename, chartDir, targetEnv) + ".txt"
 	return os.WriteFile(filepath.Join(pipelinectxt.DeploymentsPath, f), content, 0644)
 }

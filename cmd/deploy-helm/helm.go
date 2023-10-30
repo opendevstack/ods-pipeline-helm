@@ -52,6 +52,15 @@ func (d *deployHelm) helmUpgrade(args []string, stdout, stderr io.Writer) error 
 	)
 }
 
+// helmStatus runs given Helm command.
+func (d *deployHelm) helmStatus(args []string, stdout, stderr io.Writer) error {
+	return command.Run(
+		helmBin,
+		append([]string{"-n", d.releaseNamespace, "status"}, args...),
+		[]string{}, stdout, stderr,
+	)
+}
+
 // assembleHelmDiffArgs creates a slice of arguments for "helm diff upgrade".
 func (d *deployHelm) assembleHelmDiffArgs() ([]string, error) {
 	helmDiffArgs := []string{

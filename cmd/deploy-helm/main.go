@@ -44,6 +44,8 @@ type options struct {
 	srcRegistryTLSVerify bool
 	// Whether to perform just a diff without any upgrade.
 	diffOnly bool
+	// Whether to gather the Helm release status.
+	gatherStatus bool
 	// Whether to enable debug mode.
 	debug bool
 }
@@ -98,6 +100,7 @@ func main() {
 	flag.StringVar(&opts.certDir, "cert-dir", defaultOptions.certDir, "Use certificates at the specified path to access the registry")
 	flag.BoolVar(&opts.srcRegistryTLSVerify, "src-registry-tls-verify", defaultOptions.srcRegistryTLSVerify, "TLS verify source registry")
 	flag.BoolVar(&opts.diffOnly, "diff-only", defaultOptions.diffOnly, "Whether to perform only a diff")
+	flag.BoolVar(&opts.gatherStatus, "gather-status", defaultOptions.gatherStatus, "Whether to gather the Helm release status")
 	flag.BoolVar(&opts.debug, "debug", defaultOptions.debug, "debug mode")
 	flag.Parse()
 
@@ -121,6 +124,7 @@ func main() {
 		detectImageDigests(),
 		copyImagesIntoReleaseNamespace(),
 		upgradeHelmRelease(),
+		gatherHelmStatus(),
 	)
 	if err != nil {
 		logger.Errorf(err.Error())

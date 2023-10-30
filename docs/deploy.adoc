@@ -137,6 +137,13 @@ If not given, the registy host of the source image is used.
 No images will be promoted or upgrades attempted.
 
 
+
+| gather-status
+| true
+| If set to true, the task will query for the Helm release status and
+write the result to an artifact file.
+
+
 |===
 
 == Results

@@ -71,6 +71,12 @@ spec:
         No images will be promoted or upgrades attempted.
       type: string
       default: 'false'
+    - name: gather-status
+      description: |
+        If set to true, the task will query for the Helm release status and
+        write the result to an artifact file.
+      type: string
+      default: 'true'
   steps:
     - name: helm-upgrade-from-repo
       # Image is built from build/package/Dockerfile.helm.
@@ -96,7 +102,8 @@ spec:
           -api-server=$(params.api-server) \
           -api-credentials-secret=$(params.api-credentials-secret) \
           -registry-host=$(params.registry-host) \
-          -diff-only=$(params.diff-only)
+          -diff-only=$(params.diff-only) \
+          -gather-status=$(params.gather-status)
       volumeMounts:
         - mountPath: /etc/ssl/certs/private-cert.pem
           name: private-cert

@@ -57,8 +57,9 @@ func TestDeployHelmInstallsIntoSeparateNamespace(t *testing.T) {
 		importImage(t, "index.docker.io/crccheck/hello-world"),
 		createSampleAppPrivateKeySecret(t, k8sClient, namespaceConfig.Name),
 		ttr.AfterRun(func(config *ttr.TaskRunConfig, run *tekton.TaskRun, logs bytes.Buffer) {
+			dir := config.WorkspaceConfigs["source"].Dir
 			ott.AssertFileContentContains(t,
-				config.WorkspaceConfigs["source"].Dir,
+				dir,
 				filepath.Join(pipelinectxt.DeploymentsPath, fmt.Sprintf("diff-%s.txt", releaseNamespace.Name)),
 				"Release was not present in Helm.  Diff will show entire contents as new.",
 				"Deployment (apps) has been added",
@@ -66,12 +67,12 @@ func TestDeployHelmInstallsIntoSeparateNamespace(t *testing.T) {
 				"Service (v1) has been added",
 			)
 			ott.AssertFileContentContains(t,
-				config.WorkspaceConfigs["source"].Dir,
-				filepath.Join(pipelinectxt.DeploymentsPath, fmt.Sprintf("release-%s.txt", releaseNamespace.Name)),
-				"Installing it now.",
-				fmt.Sprintf("NAMESPACE: %s", releaseNamespace.Name),
-				"STATUS: deployed",
-				"REVISION: 1",
+				dir,
+				filepath.Join(pipelinectxt.DeploymentsPath, fmt.Sprintf("release-%s-%s.yaml", filepath.Base(dir), releaseNamespace.Name)),
+				"namespace: "+releaseNamespace.Name,
+				"name: helm-sample-app",
+				"status: deployed",
+				"version: 1",
 			)
 		}),
 	); err != nil {
@@ -166,27 +167,6 @@ func createReleaseNamespace(clientset *kubernetes.Clientset, ctxtNamespace, name
 
 	return ns, err
 }
-
-// 	resourceName := fmt.Sprintf("%s-%s", ctxt.ODS.Component, "helm-sample-app")
-// 	_, err := checkService(ctxt.Clients.KubernetesClientSet, separateReleaseNamespace, resourceName)
-// 	if err != nil {
-// 		t.Fatal(err)
-// 	}
-// 	_, err = checkDeployment(ctxt.Clients.KubernetesClientSet, separateReleaseNamespace, resourceName)
-// 	if err != nil {
-// 		t.Fatal(err)
-// 	}
-
-// 	// Verify log output massaging
-// 	doNotWantLogMsg := "plugin \"diff\" exited with error"
-// 	if strings.Contains(string(ctxt.CollectedLogs), doNotWantLogMsg) {
-// 		t.Fatalf("Do not want:\n%s\n\nGot:\n%s", doNotWantLogMsg, string(ctxt.CollectedLogs))
-// 	}
-// 	wantLogMsg := "identified at least one change"
-// 	if !strings.Contains(string(ctxt.CollectedLogs), wantLogMsg) {
-// 		t.Fatalf("Want:\n%s\n\nGot:\n%s", wantLogMsg, string(ctxt.CollectedLogs))
-// 	}
-// },
 
 func importImage(t *testing.T, externalRef string) ttr.TaskRunOpt {
 	return func(c *ttr.TaskRunConfig) error {
