@@ -74,6 +74,18 @@ func TestDeployHelmInstallsIntoSeparateNamespace(t *testing.T) {
 				"status: deployed",
 				"version: 1",
 			)
+
+			wantResultName := "release-namespace"
+			if len(run.Status.Results) != 1 {
+				t.Errorf("want exactly one result, got %d", len(run.Status.Results))
+			} else {
+				resultReleaseNamespace := run.Status.Results[0]
+				if resultReleaseNamespace.Name != wantResultName {
+					t.Errorf("want result name to be %q, got %q", wantResultName, resultReleaseNamespace.Name)
+				} else if resultReleaseNamespace.Value.StringVal != releaseNamespace.Name {
+					t.Errorf("want %s result to be %q, got %q", wantResultName, releaseNamespace.Name, resultReleaseNamespace.Value.StringVal)
+				}
+			}
 		}),
 	); err != nil {
 		t.Fatal(err)

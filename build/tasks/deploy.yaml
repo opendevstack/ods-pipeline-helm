@@ -77,6 +77,9 @@ spec:
         write the result to an artifact file.
       type: string
       default: 'true'
+  results:
+    - description: Target K8s namespace (or OpenShift project).
+      name: release-namespace
   steps:
     - name: helm-upgrade-from-repo
       # Image is built from build/package/Dockerfile.helm.
@@ -104,6 +107,8 @@ spec:
           -registry-host=$(params.registry-host) \
           -diff-only=$(params.diff-only) \
           -gather-status=$(params.gather-status)
+
+        echo -n "$(params.namespace)" > $(results.release-namespace.path)
       volumeMounts:
         - mountPath: /etc/ssl/certs/private-cert.pem
           name: private-cert
