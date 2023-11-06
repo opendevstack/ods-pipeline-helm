@@ -10,6 +10,10 @@ listed in the changelog.
 
 ## [Unreleased]
 
+### Added
+
+- Publish target namespace as Tekton result ([#10](https://github.com/opendevstack/ods-pipeline-helm/issues/10))
+
 ## [0.3.0] - 2023-10-30
 
 ### Changed
