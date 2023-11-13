@@ -10,6 +10,12 @@ listed in the changelog.
 
 ## [Unreleased]
 
+## [0.4.1] - 2023-11-13
+
+### Fixed
+
+- Fix invocation of Helm status for remote projects (see https://github.com/opendevstack/ods-pipeline-helm/commit/4699c455f990b32e4420dfe45436761d75a5f710)
+
 ## [0.4.0] - 2023-11-06
 
 ### Added
