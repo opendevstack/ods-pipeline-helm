@@ -54,11 +54,10 @@ func (d *deployHelm) helmUpgrade(args []string, stdout, stderr io.Writer) error 
 
 // helmStatus runs given Helm command.
 func (d *deployHelm) helmStatus(args []string, stdout, stderr io.Writer) error {
-	return command.Run(
-		helmBin,
-		append([]string{"-n", d.releaseNamespace, "status"}, args...),
-		[]string{}, stdout, stderr,
-	)
+	baseArgs := []string{"-n", d.releaseNamespace}
+	baseArgs = append(baseArgs, d.commonHelmArgs()...)
+	baseArgs = append(baseArgs, "status")
+	return command.Run(helmBin, append(baseArgs, args...), []string{}, stdout, stderr)
 }
 
 // assembleHelmDiffArgs creates a slice of arguments for "helm diff upgrade".
@@ -104,6 +103,17 @@ func (d *deployHelm) commonHelmUpgradeArgs() ([]string, error) {
 	if err != nil {
 		return []string{}, fmt.Errorf("parse upgrade flags (%s): %s", d.opts.upgradeFlags, err)
 	}
+	args = append(args, d.commonHelmArgs()...)
+	for _, vf := range d.valuesFiles {
+		args = append(args, fmt.Sprintf("--values=%s", vf))
+	}
+	args = append(args, d.cliValues...)
+	args = append(args, d.releaseName, d.helmArchive)
+	return args, nil
+}
+
+// commonHelmArgs returns arguments common to any Helm command.
+func (d *deployHelm) commonHelmArgs() (args []string) {
 	if d.opts.debug {
 		args = append([]string{"--debug"}, args...)
 	}
@@ -116,12 +126,7 @@ func (d *deployHelm) commonHelmUpgradeArgs() ([]string, error) {
 			args...,
 		)
 	}
-	for _, vf := range d.valuesFiles {
-		args = append(args, fmt.Sprintf("--values=%s", vf))
-	}
-	args = append(args, d.cliValues...)
-	args = append(args, d.releaseName, d.helmArchive)
-	return args, nil
+	return args
 }
 
 // getHelmChart reads given filename into a helmChart struct.
