@@ -99,11 +99,12 @@ func (d *deployHelm) assembleHelmUpgradeArgs() ([]string, error) {
 
 // commonHelmUpgradeArgs returns arguments common to "helm upgrade" and "helm diff upgrade".
 func (d *deployHelm) commonHelmUpgradeArgs() ([]string, error) {
-	args, err := shlex.Split(d.opts.upgradeFlags)
+	args := d.commonHelmArgs()
+	upgradeArgs, err := shlex.Split(d.opts.upgradeFlags)
 	if err != nil {
 		return []string{}, fmt.Errorf("parse upgrade flags (%s): %s", d.opts.upgradeFlags, err)
 	}
-	args = append(args, d.commonHelmArgs()...)
+	args = append(args, upgradeArgs...)
 	for _, vf := range d.valuesFiles {
 		args = append(args, fmt.Sprintf("--values=%s", vf))
 	}
